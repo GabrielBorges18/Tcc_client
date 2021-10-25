@@ -1,7 +1,7 @@
 import React from 'react';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
-import {  Snackbar, Grid,  TextField, Divider, Button } from '@material-ui/core';
+import { Snackbar, Grid, TextField, Divider, Button, Input, Avatar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import './estilos.css';
 import api from '../services/api'
@@ -101,7 +101,7 @@ class UserAdd extends React.Component {
                 senha
             } = this.state;
 
-           await api.put('/user/' + this.state.id , {
+            await api.put('/user/' + this.state.id, {
                 name,
                 age,
                 cpf,
@@ -152,7 +152,17 @@ class UserAdd extends React.Component {
                         <Grid container className="rowForm" item xs={12}>
                             <Divider className="divisor" />
                         </Grid>
-                        <Grid container item xs={12} md={12} lg={12} className="rowForm" >
+                        <Grid container style={{ justifyContent: "center", alignItems: "center" }} className="" item xs={12}>
+                            <div className="upload-image">
+
+                                <input className="form-image" id="input" type="file" />
+                                <label htmlFor="input">
+                                    <Avatar className="inputImage"> A </Avatar>
+                                    
+                                </label>
+                            </div>
+                        </Grid>
+                        <Grid container item xs={12} md={8} lg={8} className="rowForm" >
                             <TextField placeholder=""
                                 required
                                 label="Nome Completo"
@@ -175,7 +185,7 @@ class UserAdd extends React.Component {
                         <Grid container item md={8} lg={8}>
                             &nbsp;
                         </Grid>
-                        <Grid container item xs={12} md={4} lg={4} className="rowForm" >
+                        <Grid container item xs={12} md={6} lg={6} className="rowForm" >
                             <TextField placeholder=""
                                 required
                                 label="CPF"
@@ -185,7 +195,7 @@ class UserAdd extends React.Component {
 
                                 fullWidth />
                         </Grid>
-                        <Grid container item xs={12} md={4} lg={4} className="rowForm" >
+                        <Grid container item xs={12} md={6} lg={6} className="rowForm" >
                             <TextField placeholder=""
                                 required
                                 min="0"

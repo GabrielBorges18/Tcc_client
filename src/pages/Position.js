@@ -77,7 +77,7 @@ class Team extends React.Component {
 
         return (
             <>
-                <Menu user={this.props.location.state.user} />
+                <Menu user={this.props.location.state.user} page="admin"  />
                 <Header user={this.props.location.state.user} history={this.props.history} />
                 <div className="listUsers">
                     <DataTable

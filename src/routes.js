@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route} from 'react-router-dom';
-import Main from './pages/main/Main';
+import Main from './pages/main/index';
 import Calendar from './pages/calendar/Calendar';
-import Task from './pages/Task';
+import Task from './pages/task/Task';
 import Chat from './pages/Chat';
 import Login from './pages/Login';
 import User from './pages/User';

@@ -42,28 +42,7 @@ function Header(props) {
         <MenuItem onClick={handleLogout}>Sair</MenuItem>
       </Menu>
 
-      <Menu
-        id="notificationMenu"
-        anchorEl={notiAnchor}
-        keepMounted
-        open={Boolean(notiAnchor)}
-        onClose={handleCloseNotifications}
-      >
-        <MenuItem>
-          <ListItem>
-            <ListItemText>
-              Compromisso Adicionado: Mostrar TCC pro Professor
-            </ListItemText>
-          </ListItem>
-        </MenuItem>
-        <MenuItem>
-          <ListItem>
-            <ListItemText>
-              Tarefa Atribuida: User Experience
-            </ListItemText>
-          </ListItem>
-        </MenuItem>
-      </Menu>
+     
 
       <Menu
         id="messageMenu"
@@ -86,13 +65,14 @@ function Header(props) {
       <div className="header">
         <div className="icons">
           <Badge anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={1} color="primary">
-            <Mail aria-controls="messageMenu" onClick={(e) => { setMessageAnchor(e.currentTarget) }} style={{ fontSize: "40" }} />
+            <Mail  aria-controls="messageMenu" onClick={(e) => { setMessageAnchor(e.currentTarget) }} style={{ fontSize: "35" }} />
           </Badge>
           <Badge badgeContent={2} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} color="secondary">
-            <Notifications aria-controls="notificationsMenu" onClick={(e) => { setNotiAnchor(e.currentTarget) }} style={{ fontSize: "40" }} />
+            <Notifications aria-controls="notificationsMenu" onClick={(e) => { setNotiAnchor(e.currentTarget) }} style={{ fontSize: "35" }} />
           </Badge>
 
         </div>
+        
         <div className="login">
           <Avatar className="loginImg" aria-controls="loginMenu" onClick={handleClick} alt="login"> {props.user.login.substring(0, 1).toUpperCase()} </Avatar>
         </div>

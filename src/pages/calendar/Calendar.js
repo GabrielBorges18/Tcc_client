@@ -1,68 +1,98 @@
-// import api from '../../services/api'
+import api from '../../services/api'
 import React from 'react';
 import Menu from '../../components/Menu';
 import Header from '../../components/Header';
+import EventAdd from './EventAdd';
+import EventEdit from './EventEdit';
 import '../estilos.css';
 import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid' 
+import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction'
+import interactionPlugin from '@fullcalendar/interaction';
+import { format, parseISO } from 'date-fns';
+
 class Calendar extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalAdd: false,
+            modalEdit: false,
+            dateClicked: "",
+            eventClicked: 0,
+            events: []
+        };
+    }
+
+
     render() {
-        const eventos_testes = [
-            {
-                id: 1,
-                title: "Evento de Teste",
-                start: '2021-09-20'
-            },
-            {
-                id: 2,
-                title: "Mostrar TCC pro Professor",
-                start: '2021-09-23 21:30:00'
-            },
-            {
-                id: 3,
-                title: "Outro teste",
-                start: '2021-10-23 12:00:00',
-                end: '2021-10-23 13:00:00'
-            }
-        ]
+
         return (
             <>
-                <Menu user={this.props.location.state.user} />
+                <Menu user={this.props.location.state.user} page="calendar" />
                 <Header user={this.props.location.state.user} history={this.props.history} />
 
-                <div className="tituloPagina">
-                    Calendario
-                </div>
                 <div className="principal">
                     <div className="containerCalendar">
 
                         <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                             initialView="dayGridMonth"
                             locale="br"
                             height="100%"
-                            headerToolbar={{ 
-                                left:'prev,next today',
+                            
+                            headerToolbar={{
+                                left: 'prev,next today',
                                 center: 'title',
                                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                               
+
                             }}
-                            buttonText={{today: "Hoje", month: "Mês", week: "Semana", day: "Dia"}}
+                                lazyFetching={true}
+                            buttonText={{ today: "Hoje", month: "Mês", week: "Semana", day: "Dia" }}
                             // selectAllow={true}
-                            selectable={true}
-                            select={ (date) => { console.log(date)}}
-                            initialEvents={eventos_testes}
+                            selectable={false}
+                            select={(date) => { console.log(date) }}
+                            initialEvents={(events, sucessCallback) => {
+                                api.get('/getEvents').then( (response) => {  
+                                    console.log(response.data);
+                                    sucessCallback(response.data);
+                                });
+                                
+                            }}
+                            displayEventTime={false}
                             selectMirror={true}
-                            editable={true}
+                            editable={false}
                             navLinks
-                            dateClick={ (date) => {console.log(date)} }
+                            dateClick={(date) => {
+                                this.setState({
+                                    modalAdd: true,
+                                    dateClicked: format(parseISO(date.dateStr), "yyyy-MM-dd")
+                                })
+                            }}
+                            eventClick={(event) => {
+                                console.log(event.event._def.publicId);
+                                this.setState({
+                                    modalEdit:true,
+                                    eventClicked : event.event._def.publicId
+                                })
+                            }}
                         />
-                        
+
                     </div>
                 </div>
+                <EventAdd
+                    eventModal={this.state.modalAdd}
+                    eventModalClose={() => { this.setState({ modalAdd: false }) }}
+                    dateClicked={this.state.dateClicked}
+                    user_id = {this.props.location.state.user.id}
+                />
+
+                <EventEdit
+                    eventModal={this.state.modalEdit}
+                    eventModalClose={() => { this.setState({ modalEdit: false }) }}
+                    eventClicked={this.state.eventClicked}
+                    user_id = {this.props.location.state.user.id}
+                />
             </>
         );
     }

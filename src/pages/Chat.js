@@ -65,12 +65,9 @@ class Chat extends React.Component {
     }
     return (
       <>
-        <Menu user={this.props.location.state.user} />
+        <Menu user={this.props.location.state.user} page="chat" />
         <Header user={this.props.location.state.user} history={this.props.history} />
 
-        <div className="tituloPagina">
-          Chat
-        </div>
         <div className="principal">
           <div className="containerChat">
             <div className="navbarChat">
