@@ -1,29 +1,48 @@
-
 .sidebar{
-    background-color: #f8f9fa;
+    background-color:white;
     color:black;
-    max-width: 20%;
-    min-width: 17%;
+    width:260px;
     height:100%;
-    float:left;
-    border-right:1px solid black;
+    /* margin:10px; */
+    position:fixed;
+    top:0;
+    left:0;
+    z-index: 99;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    /* border-radius: 10px; */
 }
-
+.sidebar.active{
+    transition: 0.2s cubic-bezier(.685,.0473,.346,1);
+    transform: translate3d(0,0,0);
+}
+@media screen and (max-width: 991px){
+    .sidebar{
+        transition: 0.2s cubic-bezier(.685,.0473,.346,1);
+        transform: translate3d(-260px,0,0);
+    }
+}
 .perfil{
     /* background-color: #00a099; */
-    background-color: blue;
-    height: 8%;
-    border-bottom: 5px solid #ccc;
+     background-color: #0e76a8;
+    /*border-top-left-radius: 10px;
+    border-top-right-radius: 10px; */
+    height: 80px;
+    /* border-bottom: 5px solid #ccc; */
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5%;
 }
 
 .logo {
     max-height: 10vmin;
     max-width: 10vmin;
 }
-
+.divLogo{
+    color: white;
+    font-size: 40px;
+    font-family: Bahnschrift;
+}
 .divLogo .logo_menu{
     align-self: center;
     justify-self: center;
@@ -41,16 +60,16 @@
 .menuItens .item{
     padding: 0 20px;
     display: flex;
-    margin-top: 5%;
+    margin-top: 0%;
     cursor: pointer;
     position: relative;
     align-items: center;
-    height: 35px;
+    height: 60px;
     color:#555555;
 }
 .menuItens .item:hover{
     background-color: #eeebeb;
-    color: blue;
+    color: #0e76a8;
 }
 
 .menuItens .icone{

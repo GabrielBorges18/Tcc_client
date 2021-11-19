@@ -1,15 +1,15 @@
 // import api from '../../services/api'
 import React from 'react';
 import { Link } from 'react-router-dom'
-import Menu from '../components/Menu';
-import Header from '../components/Header';
+import Menu from '../../components/Menu';
+import Header from '../../components/Header';
 import DataTable from 'react-data-table-component';
 
 import { Fab, IconButton, Tooltip, Button, Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Snackbar } from '@material-ui/core';
 import { Add, Delete, Edit } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import './estilos.css';
-import api from '../services/api'
+import api from '../../services/api'
 
 
 
@@ -50,7 +50,7 @@ class User extends React.Component {
             this.setState({ openAux: !this.state.openAux });
         };
         const handleRemoveConfirm = async () => {
-            const response = await api.delete('user/'+this.state.removeID);
+            const response = await api.delete('user/'+this.state.removeID, {});
             if(response.status === 200){
                 handleRemoveClose();
                 this.setState({removeName: "", removeID: ""});
@@ -107,7 +107,7 @@ class User extends React.Component {
         return (
             <>
                 <Menu user={this.props.location.state.user} page="user" />
-                <Header user={this.props.location.state.user} history={this.props.history} />
+                {/* <Header user={this.props.location.state.user} history={this.props.history} /> */}
                 {/* 
                 <div className="tituloPagina">
                     Lista de Usuarios

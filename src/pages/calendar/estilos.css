@@ -1,0 +1,50 @@
+
+:root{
+    --fc-button-bg-color: #0e76a8;
+    --fc-button-border-color: #0e76a8;
+}
+.eventModal.MuiBox-root {
+    background-color: white;
+    width: 80%;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 3px solid rgb(173, 173, 173);
+    border-radius: 20px;
+}
+
+#eventModal-title{
+    text-align: center;
+}
+.dateInput.MuiInput-root{
+    /* border:1px solid black; */
+    border-radius:4px;
+    /* padding: 18.5px 14px; */
+    /* background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59)); */
+    margin-left: 1%;
+    /* padding: 1px 2px; */
+    border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+}
+.dateLabel{
+    margin-left: 1%;
+}
+.calendar {
+    /* background-color:#f8f9fa; */
+    max-width: 100%;
+    display: block;
+    padding:10px 20px 10px 275px;
+    min-height: calc(100vh - 80px); 
+    /* height:100%; */
+}
+@media screen and (max-width: 991px){
+    .calendar{
+        padding:10px 20px 10px 20px;
+    }
+}
+@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {flex-direction:column;} .fc-toolbar-chunk { display: table-row; text-align:center; padding:5px 0; } }
+.cardContent{
+    border-radius: 20px;
+    min-height: calc(100vh - 80px); 
+}

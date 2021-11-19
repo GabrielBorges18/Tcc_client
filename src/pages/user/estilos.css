@@ -1,0 +1,67 @@
+.user {
+    /* background-color:#f8f9fa; */
+    max-width: 100%;
+    display: block;
+    padding:10px 20px 10px 275px;
+    /* min-height: calc(100vh - 60px);  */
+    /* height:100%; */
+}
+@media screen and (max-width: 991px){
+    .user{
+        padding:10px 20px 10px 20px;
+    }
+}
+.tituloPagina {
+    padding: 10px 0px;
+    text-align: center;
+    max-width: 100%;
+    font-weight: bold;
+    font-size: 22px;
+}
+.rowForm {
+    /* border:1px solid black;  */
+    padding: 10px 10px;
+}
+.divisor {
+    min-width: 100%;
+}
+
+.rowTitle {
+    text-align: center;
+    min-width: 100%;
+}
+.cardContent{
+    border-radius: 20px;
+}
+.cardTeam.MuiPaper-root{
+    margin:20px;
+    padding:10px;
+    /* width:100%; */
+    background-color: rgb(206, 206, 206);
+}
+.titleTeam{
+    padding:0px 0px 10px 0px;
+    font-size: 25px;
+    font-family: Bahnschrift;
+}
+.userPapper{
+    width:96%;
+    margin-left:2%;
+    margin-bottom:3%;
+}
+.userView {
+    /* background-color:#f8f9fa; */
+    max-width: 100%;
+    display: block;
+    padding:10px 20px 10px 275px;
+    /* min-height: calc(100vh - 60px);  */
+    /* height:100%; */
+}
+@media screen and (max-width: 991px){
+    .userView{
+        padding:10px 20px 10px 20px;
+    }
+}
+.MuiBadge-colorSecondary{
+    background-color: "red"
+}

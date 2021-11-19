@@ -1,0 +1,105 @@
+.paperTask{
+    margin:1%;
+}
+
+.containerTask {
+    width: 98% !important;
+    border-radius: 20px;
+    margin: 1%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 19px;
+}
+.pendentColumn {
+    min-height:400px;
+    margin-bottom:20px;
+    /* border:1px solid rgb(71, 71, 71); */
+    height: 83% !important;
+    overflow-y: hidden;
+    border-radius:10px;
+    margin-right:15px;
+    background-color: #ececec;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.progressColumn {
+    min-height:400px;
+    margin-bottom:20px;
+    height: 83% !important;
+    /* border-right: 1px solid black; */
+    overflow-y: hidden;
+    /* border:1px solid black; */
+    border-radius:10px;
+    margin-right:15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: #ececec;
+}
+
+.MuiList-root.MuiList-padding{
+    padding:0px;
+}
+.concludedColumn {
+    margin-bottom:20px;
+    min-height:400px;
+    height: 83% !important;
+    /* border-right: 1px solid black; */
+    overflow-y: hidden;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    /* border:1px solid black; */
+    border-radius:10px;
+    margin-right:15px;
+    background-color: #ececec;
+}
+
+.concludedColumn:hover {
+    overflow-y: auto;
+}
+
+.concludedColumn::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.concludedColumn::-webkit-scrollbar {
+    /* border-radius:10px; */
+    background-color: #9e9e9e;
+    width: 5px;
+}
+
+.concludedColumn::-webkit-scrollbar-thumb {
+    background-color: green;
+    border-radius: 50px;
+}
+/* .progressColumn:hover{
+    overflow-y: scroll;
+}
+.pendentColumn:hover{
+    overflow-y: scroll;
+} */
+
+.pendentHeader {
+    min-height: 40px;
+    height: 6%;
+    background: rgb(67, 180, 245);
+    color:white;
+    border-bottom: 1px solid black;
+}
+.pendentHeaderText{
+    margin-top:100px;
+}
+
+.progressHeader {
+    min-height: 40px;
+    height: 6%;
+    background:  rgb(141, 141, 141);
+    border-bottom: 1px solid black;
+    color:white;
+}
+
+.concludedHeader {
+    min-height: 40px;
+    height: 6%;
+    /* background:  linear-gradient(90deg, rgb(0, 83, 38) 0%, rgb(93, 189, 93) 100%); */
+    background-color: rgb(71, 204, 138);
+    color:white;
+    border-bottom: 1px solid black;
+}

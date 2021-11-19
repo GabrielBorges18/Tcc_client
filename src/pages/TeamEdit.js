@@ -64,7 +64,7 @@ class TeamAdd extends React.Component {
         return (
             <>
                 <Menu user={this.props.location.state.user} />
-                <Header user={this.props.location.state.user} history={this.props.history} />
+                {/* <Header user={this.props.location.state.user} history={this.props.history} /> */}
 
                 <div className="tituloPagina">
                     <Grid item xs={12} >

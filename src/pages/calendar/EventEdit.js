@@ -9,7 +9,7 @@ class EventUtis extends React.Component {
         this.state = {
             id: 0,
             open: false,
-            
+
             endDate: "",
             title: "",
             startDate: "",
@@ -36,7 +36,7 @@ class EventUtis extends React.Component {
             console.log(this.state);
         }
         else {
-            alert("Erro");
+            // alert("Erro");
         }
     }
     render() {
@@ -49,43 +49,30 @@ class EventUtis extends React.Component {
         this.state.open = open;
         this.state.user_id = this.props.user_id;
         //Funções
-        const handleSubmit = async () => {
-            const { startDate,
-                id,
-                endDate,
-                title,
-                startTime,
-                endTime,
+        const handleCancel = async () => {
+            const { id,
                 user_id
             } = this.state;
-
-            if (title == "") {
-                alert("Insira o Titulo");
-            }
-            else if (endDate == "") {
-                alert("Insira a data de finalização antes de prosseguir!");
-            }
-            else {
-                const response = await api.post('/event', {
-                    title,
-                    startDate,
-                    endDate,
-                    startTime,
-                    endTime,
-                    user_id
+            console.log(user_id);
+            try {
+                const response = await api.delete('/event/' + id, {
+                    headers: { user_id }
                 });
                 if (response.status = 200) {
-                    alert("Evento criado com sucesso!");
+                    alert("Evento deletado com Sucesso");
                     this.setState({
                         open: false,
-                        title: ""
                     });
                     handleClose();
                 }
                 else {
-                    alert("Erro ao criar Evento!");
+                    alert("Erro ao deletar Evento!");
                 }
             }
+            catch (e) {
+                alert("Erro ao deletar Evento!");
+            }
+
         };
 
         return (
@@ -125,12 +112,13 @@ class EventUtis extends React.Component {
                                     <Divider className="divisor" />
                                 </Grid>
                                 <Grid container item xs={12} md={6} lg={6} className="rowForm" >
-                                    <InputLabel className="dateLabel" htmlFor="startDate">Data de Inicio*</InputLabel>
+                                    <InputLabel className="dateLabel" htmlFor="startDate">Data de Inicio</InputLabel>
                                     <Input placeholder=""
                                         required
                                         type="date"
                                         id="endDate"
                                         className="dateInput"
+                                        readOnly
                                         min="0"
                                         value={this.state.startDate}
                                         label="Data de Finalização"
@@ -139,11 +127,12 @@ class EventUtis extends React.Component {
                                         fullWidth />
                                 </Grid>
                                 <Grid container item xs={12} md={6} lg={6} className="rowForm" >
-                                    <InputLabel className="dateLabel" htmlFor="endDate">Data de Finalização*</InputLabel>
+                                    <InputLabel className="dateLabel" htmlFor="endDate">Data de Finalização</InputLabel>
                                     <Input placeholder=""
                                         required
                                         type="date"
                                         id="endDate"
+                                        readOnly
                                         className="dateInput"
                                         min="0"
                                         value={this.state.endDate}
@@ -165,6 +154,9 @@ class EventUtis extends React.Component {
                                         label="Hora de Inicio"
                                         onChange={(e) => { this.setState({ startTime: e.target.value }) }}
                                         variant="outlined"
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
                                         fullWidth />
                                 </Grid>
                                 <Grid container item xs={12} md={6} lg={6} className="rowForm" >
@@ -175,6 +167,9 @@ class EventUtis extends React.Component {
                                         label="Hora de Finalização"
                                         onChange={(e) => { this.setState({ endTime: e.target.value }) }}
                                         variant="outlined"
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
                                         fullWidth />
                                 </Grid>
                                 <Grid container className="rowForm" item xs={12}>
@@ -183,14 +178,11 @@ class EventUtis extends React.Component {
                                 <Grid container className="rowForm" item xs={12} md={1} lg={1}>
                                     <Button variant="contained" color="secondary" onClick={handleClose} > Fechar </Button>
                                 </Grid>
-                                <Grid container className="rowForm" item xs={12} md={9} lg={9}>
+                                <Grid container className="rowForm" item xs={12} md={10} lg={10}>
                                     &nbsp;
                                 </Grid>
                                 <Grid container className="rowForm" item xs={12} md={1} lg={1}>
-                                    <Button variant="contained" onClick={handleSubmit} color="primary" > Atualizar </Button>
-                                </Grid>
-                                <Grid container className="rowForm" item xs={12} md={1} lg={1}>
-                                    <Button variant="contained" onClick={handleSubmit} color="secondary" > Excluir </Button>
+                                    <Button variant="contained" onClick={handleCancel} color="secondary" > Excluir </Button>
                                 </Grid>
                             </Grid>
                         </Box>

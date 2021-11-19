@@ -3,9 +3,10 @@
   align-items: center;
   text-align: center;
   justify-content: center;
-  background-color: rgb(8, 8, 8);
+  background-color: #0e76a8;
   min-height: 100vh;
   min-width: 100vw;
+  
 }
 
 .Login-logo {
@@ -16,14 +17,17 @@
   pointer-events: none;
 }
 
-.logo {
-  
-  margin-top:15%;
-  height: 25vmin;
-  width: 25vmin;
+.logoLogin {
   align-self: center;
   justify-self: center;
   pointer-events: none;
+}
+
+.logoLoginAux{
+  align-self: center;
+  justify-self: center;
+  pointer-events: none;
+  width:100%;
 }
 
 .Login-header {
@@ -38,20 +42,23 @@
   color: white;
 }
 .Login-container{
-  
   display:grid;
   grid-template-columns: 50% 50%;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 7px;
   max-height: 65vh;
   min-height: 65vh;
   max-width: 65vw;
   min-width: 65vw;
-  background-color: #e2e2e2;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .Logo-container{
   /* background-color:; */
+  display:inline-block;
+  align-items:center;
+  text-align: center;
   max-height:90%;
   min-height:90%;
   align-self:center;
@@ -61,6 +68,7 @@
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-size: calc(10px + 2vmin);
 }
+
 .Login-link {
   color: #61dafb;
 }
@@ -74,27 +82,38 @@
   margin:0;
   align-self:left;
 }
+@media screen and (min-width:991px){
+  .Logo-containerAux{
+    display:none;
+  }
+}
+@media screen and (max-width: 991px) {
+  .Login-container{
+    grid-template-columns: 100%;
+    min-width:85vw;
+  }
+  .Logo-container {
+    display: none;
+  }
+  .Logo-containerAux {
+    display: block;
+  }
+  .Login-logo{
+    margin-top: 20px;
+  }
+  .Login-container{
+    min-height: 500px;
+  }
+}
 .testeInput{
   margin-bottom: 10%;
   width:80%;
   color:blue;
 }
 .LoginAux{
-  margin-left:10%;
+  float:right;
+  margin-right:10%;
   text-align: left;
   justify-content: left;
 
 }
-/*
-
-none: nenhuma borda
-hidden: equivalente a none
-dotted: borda pontilhada
-dashed: borda tracejada
-solid: borda contínua
-double: borda dupla
-groove: borda entalhada
-ridge: borda em ressalto
-inset: borda em baixo relevo
-outset: borda em alto relevo
-*/

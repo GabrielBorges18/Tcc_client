@@ -1,11 +1,11 @@
-import logo from '../assets/Logo.png';
-import loginImg from '../assets/login.png';
+import logo from '../../assets/Logo.png';
+import loginImg from '../../assets/login.png';
 import './Login.css';
-import api from '../services/api'
+import api from '../../services/api'
 
 import { useState } from 'react'
 
-import { TextField, createTheme, Button, Snackbar } from '@material-ui/core';
+import { TextField, createTheme, Button, Snackbar, CircularProgress } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import { blue } from '@material-ui/core/colors';
 import Alert from '@material-ui/lab/Alert';
@@ -17,36 +17,38 @@ const temaLogin = createTheme({
 
 })
 
-function Login({history}) {
+function Login({ history }) {
 
     const [login, setLogin] = useState('');
     const [senha, setSenha] = useState('');
 
     const [open, setOpen] = useState(false);
     const [openAux, setOpenAux] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             handleOnClick();
         }
     }
-
     async function handleOnClick() {
+        setLoading(true);
         const response = await api.post('/auth', {
             login,
             senha
         });
+
         const { error } = response.data;
         if (error === 1) {
-            console.log("Usuario invalido");
             setOpen(true);
         }
         else {
             const { user } = response.data;
+            localStorage.setItem('@seger/user_info', user.id);
             setOpenAux(true);
             history.push('/main', { user })
         }
-        console.log(response);
+        setLoading(false);
     }
     const handleClose = () => {
         setOpen(!open);
@@ -61,12 +63,13 @@ function Login({history}) {
                 <div className="Login-container">
 
                     <div className="Logo-container">
-                        <div className="logoAux-container">
-                            <img src={logo} className="logo" alt="logo" />
-                            <p> Serge </p>
-                        </div>
+                        <img src={logo} className="logoLogin" alt="logo" />
                     </div>
                     <div className="Form-container">
+
+                        <div className="Logo-containerAux">
+                            <img src={logo} className="logoLoginAux" alt="logo" />
+                        </div>
                         <img src={loginImg} className="Login-logo" alt="logo" />
                         <form>
                             <TextField
@@ -91,7 +94,13 @@ function Login({history}) {
                             />
                             <div className="LoginAux">
                                 <br></br>
-                                <Button variant="contained" onClick={handleOnClick} color="primary" > Entrar </Button>
+                                <Button variant="contained"
+                                    onClick={handleOnClick}
+                                    color="primary"
+                                    style={{ backgroundColor: (loading) ? "#b0b0b0" : "#0e76a8", height: "45px", width: "80px" }} >
+                                    {!loading && "Entrar"}
+                                    {loading && <CircularProgress />}
+                                </Button>
                             </div>
                             <Snackbar open={open} onClick={handleClose} autoHideDuration={6000} onClose={handleClose}>
                                 <Alert onClose={handleClose} variant="filled" severity="error">
