@@ -1,15 +1,17 @@
-// import api from '../../services/api'
-import React from 'react';
+import React, { createRef } from 'react';
 import Menu from '../../components/Menu';
 import { Button, Avatar, List, ListItem, Divider, ListItemText, ListItemAvatar, Fab, Card, Badge } from '@material-ui/core'
 import { format } from 'date-fns';
-import io from 'socket.io-client';
+import produce from 'immer';
+import AddChat from './AddChat';
+
 import { Send, AttachFile, Add, Close } from '@material-ui/icons';
-import produce from 'immer'
+import Context from './context'
 import './estilos.css';
 import ChatBox from './ChatBox'
 import MenuIcon from '@material-ui/icons/Menu';
-const socket = io('http://localhost:3333');
+import socket from '../../services/socket'
+import api from '../../services/api'
 
 class Chat extends React.Component {
 
@@ -18,59 +20,29 @@ class Chat extends React.Component {
     this.state = {
       sidebar: false,
       activeChat: "0",
+      addChatModal: false,
       textMessage: "",
-      chats: [
-        {
-          name: "Lucas Doria",
-          user_id: "22",
-          image: "LD",
-          messages: [
-            {
-              type: "text",
-              id: "0",
-              message: "Testes mensagem sendo recebidaaaaaaaaaaaaaaa/Testes mensagem sendo recebidaaaaaaaaaaaaaa/Testes mensagem sendo recebidaaaaaaaaaaaaaa/Testes mensagem sendo recebidaaaaaaaaaaaaaa/Testes mensagem sendo recebidaaaaaaaaaaaaaa",
-              sendAt: "2021-11-12T19:53:59"
-            },
-            {
-              type: "text",
-              id: "1",
-              message: "Testes mensagem sendo enviada",
-              sendAt: "2021-11-12T20:50:14"
-            },
-            {
-              type: "file",
-              id: "1",
-              message: "Arquivo_de_teste.jpeg",
-              sendAt: "2021-11-12T21:53:30",
-              pathFile: "files/1.png"
-            }
-          ]
-        },
-        {
-          name: "Gabriel Arcanjo",
-          image: "GA",
-          user_id: "23",
-          messages: [
-            {
-              type: "text",
-              id: "0",
-              message: "Salve ADM",
-              sendAt: "2021-11-12T19:53:59"
-            },
-            {
-              type: "text",
-              id: "1",
-              message: "Salve Arcanjo",
-              sendAt: "2021-11-12T19:53:59"
-            }
-          ]
-        }
-      ]
+      chats: []
       //...
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+
+    try {
+      const response = await api.post("/getChats", { id: this.props.location.state.user.id });
+      const { data, status } = response;
+      console.log(data);
+      if (status == 200) {
+        this.setState({
+          chats: data
+        })
+      }
+    }
+    catch (e) {
+
+    }
+
     const getChat = (user_id) => {
 
       let index = -1;
@@ -83,6 +55,7 @@ class Chat extends React.Component {
       return index;
     }
 
+
     socket.on('chat.message', (data) => {
 
       const chat = getChat(data.user_id);
@@ -90,7 +63,7 @@ class Chat extends React.Component {
       this.setState({
         chats: produce(this.state.chats, draft => {
           draft[chat].messages.push({
-            type: "text",
+            type: data.type,
             id: "0",
             message: data.message,
             sendAt: data.sendAt
@@ -105,15 +78,19 @@ class Chat extends React.Component {
 
       const message = this.state.textMessage;
       const sendAt = format(new Date(), "yyyy-MM-dd HH:mm:ss");
-
       socket.emit('chat.message', {
         user_id: this.props.location.state.user.id,
+        user_name: this.props.location.state.user.name,
         toUserId: this.state.chats[this.state.activeChat].user_id,
+        chat_id: this.state.chats[this.state.activeChat].chat_id,
         message,
-        sendAt
+        sendAt,
+        type: "text",
+        path_file: ""
       });
 
       this.setState({
+        textMessage: "",
         chats: produce(this.state.chats, draft => {
           draft[this.state.activeChat].messages.push({
             user_id: this.props.location.state.user.id,
@@ -122,19 +99,93 @@ class Chat extends React.Component {
             message,
             sendAt
           });
-        }),
-        textMessage: ""
+        })
       })
     }
 
+    const handleSendFile = (e) => {
+      if (!e.target.files || e.target.files.length === 0) {
+        return
+      }
+      const sendAt = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+
+      const data = new FormData();
+
+      data.append("user_id", this.props.location.state.user.id);
+      data.append("user_name", this.props.location.state.user.name);
+      data.append("chat_id", this.state.chats[this.state.activeChat].chat_id);
+      data.append("message", e.target.files[0].name);
+      data.append("sendAt", sendAt);
+      data.append("type", "image");
+      data.append("file", e.target.files[0]);
+
+      socket.emit('chat.messageFile', {
+        user_id: this.props.location.state.user.id,
+        user_name: this.props.location.state.user.name,
+        toUserId: this.state.chats[this.state.activeChat].user_id,
+        chat_id: this.state.chats[this.state.activeChat].chat_id,
+        message: e.target.files[0].name,
+        sendAt,
+        type: "file",
+        path_file: "",
+        file: e.target.files[0]
+      });
+
+      this.setState({
+        chats: produce(this.state.chats, draft => {
+          draft[this.state.activeChat].messages.push({
+            user_id: this.props.location.state.user.id,
+            type: "file",
+            id: "1",
+            message: e.target.files[0].name,
+            sendAt,
+            path_file: `/files/${e.target.files[0].name}`
+          });
+        })
+      })
+    }
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
         handleSendMensage();
       }
     }
 
+    const addToChat = async (user) => {
+
+      try {
+        const response = await api.post(`/addToChat`, {
+          from: this.props.location.state.user.id,
+          to: user.id
+        });
+        const { data, status } = response;
+
+        if (status === 200) {
+          this.setState({
+            chats: produce(this.state.chats, draft => {
+              draft.push({
+                chat_id: data.id,
+                messages: {},
+                name: user.name,
+                path_image: user.path_image,
+                user_id: user.id
+              })
+            })
+          })
+        }
+        else {
+          alert("Erro ao Adicionar Chat")
+        }
+      }
+      catch (e) {
+        console.log(e);
+        alert("Erro ao Adicionar Chat")
+      }
+
+    }
+    const inputFileRef = createRef();
+
     return (
-      <>
+      <Context.Provider value={{ addToChat }}>
         <Menu user={this.props.location.state.user} history={this.props.history} page="chat" />
 
         <div className="chat">
@@ -147,16 +198,17 @@ class Chat extends React.Component {
                     <Button color="primary" variant="outlined"><Search /></Button>
                   </ListItem> */}
                   {
+                    this.state.chats.length > 0 &&
                     this.state.chats.map((chat, index) =>
                       <>
-                        <Divider className="divisorUser" component="li" />
+                        <Divider className="divisorUser" key={index} component="li" />
                         <ListItem className={(this.state.activeChat == index) ? "userChat active" : "userChat"} alignItems="flex-start" index={index} onClick={() => { this.setState({ activeChat: index }) }}>
                           <ListItemAvatar>
-                            <Avatar className="loginImg">{chat.image}</Avatar>
+                            <Avatar src={chat.path_image} className="loginImg">LD</Avatar>
                           </ListItemAvatar>
                           <ListItemText
                             primary={chat.name}
-                            secondary={chat.messages[(chat.messages.length - 1)].message}
+                            secondary={(chat.messages.length > 0) ? chat.messages[chat.messages.length - 1].message : ""}
                           />
                         </ListItem>
                         <Divider component="li" />
@@ -164,7 +216,7 @@ class Chat extends React.Component {
                     )
                   }
                   <Divider component="li" />
-                  <ListItem className="fabTeste" alignItems="center" >
+                  <ListItem className="fabTeste" onClick={() => { this.setState({ addChatModal: true }) }} alignItems="center" >
                     <Fab color="primary">
                       <Add />
                     </Fab>
@@ -180,14 +232,23 @@ class Chat extends React.Component {
                   </div>
 
                   <div className="activeChat">
-                    <Avatar className="loginImg">{this.state.chats[this.state.activeChat].image}</Avatar>
-                    <span>{this.state.chats[this.state.activeChat].name}</span>
+                    {this.state.chats.length > 0 &&
+                      <>
+                        <Avatar className="loginImg" src={this.state.chats[this.state.activeChat].path_image}>LD</Avatar>
+                        <span>{this.state.chats[this.state.activeChat].name}</span>
+                      </>
+                    }
                   </div>
                 </div>
                 &nbsp;
-                <ChatBox
-                  messages={this.state.chats[this.state.activeChat].messages}
-                />
+                {this.state.chats.length > 0 &&
+                  <ChatBox
+                    messages={this.state.chats[this.state.activeChat].messages}
+                  />
+                }
+                {this.state.chats.length == 0 &&
+                  <ChatBox messages={[]} />
+                }
               </div>
 
               <div className="sendBox">
@@ -203,20 +264,27 @@ class Chat extends React.Component {
                   onClick={handleSendMensage}>
                   <Send />
                 </Button>
-                <Button
-                  variant="contained"
-                  className="attachButton"
-                  onClick={handleSendMensage}>
-
-                  <AttachFile />
-
-                </Button>
+                <input className="form-image" ref={inputFileRef} id="sendFileChat" onChange={handleSendFile} id="input" type="file" />
+                <label htmlFor="input">
+                  <Button
+                    variant="contained"
+                    className="attachButton"
+                    onClick={() => { inputFileRef.current.click() }}
+                  >
+                    <AttachFile />
+                  </Button>
+                </label>
               </div>
 
             </div>
           </Card>
         </div>
-      </>
+        <AddChat
+          addChatModal={this.state.addChatModal}
+          addChatModalClose={() => { this.setState({ addChatModal: false }) }}
+          userId={this.props.location.state.user.id}
+        />
+      </Context.Provider>
     );
   }
 }

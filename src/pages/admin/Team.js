@@ -1,14 +1,13 @@
 // import api from '../../services/api'
 import React from 'react';
 import { Link } from 'react-router-dom'
-import Menu from '../components/Menu';
-import Header from '../components/Header';
+import Menu from '../../components/Menu';
 import DataTable from 'react-data-table-component';
 import { Fab, IconButton, Tooltip, Button, Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Snackbar } from '@material-ui/core';
 import { Add, Delete, Edit } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import './estilos.css';
-import api from '../services/api'
+import api from '../../services/api'
 
 
 
@@ -106,8 +105,7 @@ class User extends React.Component {
 
         return (
             <>
-                <Menu user={this.props.location.state.user} page="admin" />
-                {/* <Header user={this.props.location.state.user} history={this.props.history} /> */}
+                <Menu user={this.props.location.state.user} history={this.props.history} page="admin" />
                 {/* 
                 <div className="tituloPagina">
                     Lista de Usuarios

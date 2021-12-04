@@ -2,9 +2,8 @@ import React from 'react';
 import Menu from '../../components/Menu';
 import GoogleCalendarIcon from '../../assets/Google_Calendar.svg';
 import { Snackbar, Grid, TextField, Divider, Button, Badge, Avatar, Card } from '@material-ui/core';
-import { Home, EventNote, Group } from '@material-ui/icons';
 import { styled } from "@material-ui/core/styles";
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import './estilos.css';
 import api from '../../services/api'
 
@@ -20,36 +19,56 @@ class UserEdit extends React.Component {
             rg: "",
             email: "",
             senha: "",
+            team: "",
+            position: "",
+            path_image: "",
             googleCalendar: 0,
             open: false,
-            openAux: false
+            openAux: false,
+            options: [],
+            imageFile: null,
+            phone: ""
         };
     }
 
     async componentDidMount() {
+
         const { id } = this.props.match.params;
         const response = await api.get('/user/' + id);
         const { data, status } = response;
-
         if (status === 200) {
+            if (this.props.location.state.user.login == "Administrador") {
+                const responseOption = await api.get('/getTeams');
+                if (responseOption.status == 200) {
+                    const options = responseOption.data.map((option) => {
+                        return option;
+                    });
+                    this.setState({
+                        options: options
+                    });
+                }
+            }
             this.setState({
                 id: data.id,
                 name: data.name,
                 age: data.age,
                 cpf: data.cpf,
                 rg: data.rg,
+                team: data.team_id,
                 email: data.login,
                 senha: data.senha,
-                googleCalendar: data.google_calendar
+                googleCalendar: data.google_calendar,
+                position: data.position,
+                path_image: "/" + data.path_image,
+                phone: data.phone
             });
-            // console.log(data);
+            //  console.log(data);
         }
-        else {
-
-        }
+        console.log(this.state.path_image);
     }
 
     render() {
+        console.log(this.props);
         const InactiveBadge = styled(Badge)({
             "& .MuiBadge-badge": {
                 color: "white",
@@ -115,17 +134,25 @@ class UserEdit extends React.Component {
                 cpf,
                 rg,
                 email,
-                senha
+                senha,
+                team,
+                position,
+                imageFile,
+                phone
             } = this.state;
 
-            await api.put('/user/' + this.state.id, {
-                name,
-                age,
-                cpf,
-                rg,
-                login: email,
-                senha
-            }).then((response) => {
+            const data = new FormData();
+            data.append('name', name);
+            data.append('age', age);
+            data.append('cpf', cpf);
+            data.append('rg', rg);
+            data.append('login', email);
+            data.append('senha', senha);
+            data.append('team_id', team);
+            data.append('position', position);
+            data.append('imageFile', imageFile);
+            data.append('phone', phone);
+            await api.put('/user/' + this.state.id, data).then((response) => {
 
                 if (response.status === 200) {
                     this.setState({ openAux: true });
@@ -148,6 +175,17 @@ class UserEdit extends React.Component {
         const handleCloseAux = () => {
             this.setState({ openAux: !this.state.openAux });
         };
+
+        const handleSubmitImage = (e) => {
+            if (!e.target.files || e.target.files.length === 0) {
+                return
+            }
+            const objectUrl = URL.createObjectURL(e.target.files[0])
+            this.setState({
+                path_image: objectUrl,
+                imageFile: e.target.files[0]
+            })
+        }
 
         const handleCalendar = async () => {
             const response = await api.get('/calendar/getAuthUrl');
@@ -182,8 +220,7 @@ class UserEdit extends React.Component {
 
         return (
             <>
-                <Menu user={this.props.location.state.user} />
-                {/* <Header user={this.props.location.state.user} history={this.props.history} /> */}
+                <Menu user={this.props.location.state.user} history={this.props.history} />
 
                 <div className="user">
                     <Card className="cardContent" elevation={10}>
@@ -205,10 +242,9 @@ class UserEdit extends React.Component {
                             <Grid container style={{ justifyContent: "center", alignItems: "center" }} className="" item xs={12}>
                                 <div className="upload-image">
 
-                                    <input className="form-image" id="input" type="file" />
+                                    <input className="form-image" onChange={handleSubmitImage} id="input" type="file" />
                                     <label htmlFor="input">
-                                        <Avatar className="inputImage"> A </Avatar>
-
+                                        <Avatar src={this.state.path_image} className="inputImage" />
                                     </label>
                                 </div>
                             </Grid>
@@ -255,7 +291,66 @@ class UserEdit extends React.Component {
                                     variant="outlined"
                                     fullWidth />
                             </Grid>
+                            <Grid container item xs={12} md={6} lg={6} className="rowForm" >
+                                <TextField placeholder=""
+                                    required
+                                    min="0"
+                                    label="Telefone"
+                                    onChange={(e) => { this.setState({ phone: e.target.value }) }}
+                                    value={this.state.phone}
+                                    variant="outlined"
+                                    fullWidth />
+                            </Grid>
+                            <Grid container item xs={12} md={6} lg={6} className="rowForm" >
 
+                            </Grid>
+                            {this.props.location.state.user.login == "Administrador" &&
+                                <>
+                                    <Grid container item xs={12} md={6} lg={6} className="rowForm" >
+                                        {/* <InputLabel id="options">Equipe</InputLabel> */}
+                                        <select
+                                            style={{
+                                                width: "100%",
+                                                height: "45px",
+                                                border: "1px solid #c9c9c9",
+                                                borderRadius: "5px"
+
+                                            }}
+                                            labelId="options"
+                                            label="Equipe"
+                                            value={this.state.team}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    team: event.target.value
+                                                })
+                                            }}
+                                            fullWidth>
+                                            {
+                                                this.state.options.map((option, index) =>
+                                                    <>
+                                                        <option key={option.value} index={index} value={option.value}>{option.label}</option>
+                                                    </>
+                                                )
+                                            }
+                                        </select>
+
+                                    </Grid>
+                                    <Grid container item xs={12} md={6} lg={6} className="rowForm" >
+                                        <TextField placeholder=""
+                                            required
+                                            min="0"
+                                            label="Cargo"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    position: e.target.value
+                                                })
+                                            }}
+                                            value={this.state.position}
+                                            variant="outlined"
+                                            fullWidth />
+                                    </Grid>
+                                </>
+                            }
                             <Grid container className="rowForm" item xs={12}>
                                 <Divider className="divisor" />
                             </Grid>
@@ -318,6 +413,7 @@ class UserEdit extends React.Component {
                                     variant="outlined"
                                     fullWidth />
                             </Grid>
+
                             <Grid container className="rowForm" item xs={12}>
                                 <Divider className="divisor" />
                             </Grid>
@@ -340,7 +436,7 @@ class UserEdit extends React.Component {
                 </Snackbar >
                 <Snackbar open={this.state.openAux} onClick={handleCloseAux} autoHideDuration={6000} onClose={handleCloseAux}>
                     <Alert onClose={handleCloseAux} variant="filled" severity="success">
-                        Usuario cadastrado com sucesso!
+                        Usuario Editado com sucesso!
                     </Alert>
                 </Snackbar >
             </>

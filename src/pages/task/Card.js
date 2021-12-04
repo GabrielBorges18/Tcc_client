@@ -5,7 +5,7 @@ import { List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar } from '@
 import { useDrag, useDrop} from 'react-dnd'
 import { ItemTypes } from './Constants'
 
-const Card = ({ title, text, index, id, list }) => {
+const Card = ({ title, description, index, id, list }) => {
 
     const ref = useRef();
 
@@ -18,7 +18,7 @@ const Card = ({ title, text, index, id, list }) => {
         })
     });
 
-    const [{ isOver }, drop] = useDrop({
+    const [{  }, drop] = useDrop({
         accept: ItemTypes.Card,
         hover(item, monitor){
             const dragged = item.index;
@@ -66,7 +66,7 @@ const Card = ({ title, text, index, id, list }) => {
                 </ListItemAvatar>
                 <ListItemText
                     primary={title}
-                    secondary={text}
+                    secondary={description}
                 />
             </ListItem>
             <Divider component="li" />

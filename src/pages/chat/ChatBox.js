@@ -1,19 +1,24 @@
 // import api from '../../services/api'
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { FileCopy } from '@material-ui/icons';
 import { Link } from 'react-router-dom'
 
-const ChatBox = ({ messages }) => {
+function ChatBox({ messages }){
 
     const length = messages.length - 1;
+    const ref = useRef();
+
+    useEffect(() => {
+        const height = ref.current.scrollHeight;
+        ref.current.scrollTop  = height;
+     } , [messages]);
     
     return (
-        <div className="chatHistory">
-            {
-               
+        <div className="chatHistory" ref={ref}>
+            { messages.length > 0 &&
                 messages.map((message, index) => <>
-                    <div style={{ marginBottom: (length === index ? "40px" : "2px") }} 
+                    <div key={index} style={{ marginBottom: (length === index ? "40px" : "2px") }} 
                         index={index}
                         className={(message.id == 0 ? "sendMessage" : "receiveMessage")}
                         
@@ -27,9 +32,9 @@ const ChatBox = ({ messages }) => {
 
                         {message.type == "file" &&
                             <>
-                                <Link to={message.pathFile} target="_blank" download={message.message}>
+                                <Link key={index} to={message.path_file} target="_blank" download={message.message}>
                                     <div className="fileMessage" >
-                                        <FileCopy style={{ fontSize: "40px" }} />
+                                        <FileCopy  style={{ fontSize: "40px" }} />
                                         <p className="fileName">{message.message}</p>
                                         <span className="sendAt"> {format(parseISO(message.sendAt), "dd/MM/yyyy HH:mm:ss")} </span>
                                     </div>
@@ -42,6 +47,8 @@ const ChatBox = ({ messages }) => {
             }
         </div>
     );
+
+
 
 }
 export default ChatBox;

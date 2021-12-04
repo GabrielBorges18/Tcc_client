@@ -26,14 +26,21 @@ class EventUtis extends React.Component {
         };
     }
 
+    async componentWillReceiveProps(nextProps) {
+
+        const date = nextProps.dateClicked;
+
+        this.setState({
+            startDate: date,
+            endDate: date
+        })
+    }
     render() {
 
         //Variaveis auxiliares
         const open = this.props.eventModal;
         const handleClose = this.props.eventModalClose;
-        const date = this.props.dateClicked;
-        this.state.startDate = date;
-        this.state.endDate = date;
+       
         this.state.open = open;
         this.state.user_id = this.props.user_id;
 
@@ -89,7 +96,6 @@ class EventUtis extends React.Component {
                         user_id,
                         allDay
                     });
-                    console.log(response);
                     if (response.status == 200) {
                         alert("Evento criado com sucesso!");
                         this.setState({
@@ -165,7 +171,7 @@ class EventUtis extends React.Component {
                                         className="dateInput"
                                         value={this.state.startDate}
                                         label=""
-                                        onChange={(e) => { this.setState({ startDate: e.target.value }) }}
+                                        onChange={(e) => {  this.setState({ startDate: e.target.value }) }}
                                         variant="outlined"
                                         fullWidth />
                                 </Grid>

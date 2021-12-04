@@ -33,7 +33,6 @@ class EventUtis extends React.Component {
                 endTime: response.data.end_time
             })
 
-            console.log(this.state);
         }
         else {
             // alert("Erro");
@@ -53,7 +52,6 @@ class EventUtis extends React.Component {
             const { id,
                 user_id
             } = this.state;
-            console.log(user_id);
             try {
                 const response = await api.delete('/event/' + id, {
                     headers: { user_id }

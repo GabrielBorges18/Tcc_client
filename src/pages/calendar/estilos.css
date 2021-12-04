@@ -38,6 +38,13 @@
     min-height: calc(100vh - 80px); 
     /* height:100%; */
 }
+.supervisorCard{
+    padding: 20px;
+    width:400px;
+}
+.changeUserSelect{
+    margin-left:20px;
+}
 @media screen and (max-width: 991px){
     .calendar{
         padding:10px 20px 10px 20px;

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import Menu from '../components/Menu';
-import Header from '../components/Header';
+import Menu from '../../components/Menu';
 import { Fab, Snackbar, Grid, Input, TextField, Divider, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import './estilos.css';
-import api from '../services/api'
+import api from '../../services/api'
 
 class TeamAdd extends React.Component {
 
@@ -48,8 +47,7 @@ class TeamAdd extends React.Component {
 
         return (
             <>
-                <Menu user={this.props.location.state.user} page="admin" />
-                {/* <Header user={this.props.location.state.user} history={this.props.history} /> */}
+                <Menu user={this.props.location.state.user} history={this.props.history} page="admin" />
 
                 <div className="tituloPagina">
                     <Grid item xs={12} >

@@ -5,7 +5,6 @@ import CardUser from './CardUser'
 
 const CardTeam = ({ title, members }) => {
     
-    console.log(title);
     return (
         <Paper className="cardTeam" elevation={6} >
 
@@ -18,9 +17,12 @@ const CardTeam = ({ title, members }) => {
                 {
                     members.map((member, idx) => 
                             <CardUser
-                                index={idx}
+                                key={idx}
                                 name={member.name}
                                 role={member.role}
+                                path_image={member.path_image}
+                                email={member.login}
+                                phone={member.phone}
                             />
                     )
                 }

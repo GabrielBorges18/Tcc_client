@@ -1,0 +1,92 @@
+body{
+    overflow-x: hidden;
+    background-color: #f8f9fa;
+}
+.team {
+    /* background-color:#f8f9fa; */
+    max-width: 100%;
+    display: block;
+    padding:10px 20px 10px 275px;
+    /* min-height: calc(100vh - 60px);  */
+    /* height:100%; */
+}
+@media screen and (max-width: 991px){
+    .team{
+        padding:10px 20px 10px 20px;
+    }
+}
+
+.cardContent{
+    border-radius: 20px;
+}
+.listUsers {
+    /* background-color: red; */
+    margin-left: 18%;
+    max-width: 100%;
+    margin-right: 1%;
+}
+
+.addButton {
+    background-color: red;
+}
+
+.pappersDiv {
+    display: flex;
+    /* background-color: red; */
+    align-items: center;
+    justify-content: center;
+    /* height:100%; */
+}
+
+.pappers {
+    width: 90%;
+    height:80%; 
+    margin: 5%;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    white-space: pre-line;
+}
+
+
+.pappers svg {
+    min-width: 100%;
+    font-size: 15vh;
+}
+
+.pappers p {
+    text-align: center;
+    min-width: 100%;
+}
+
+.usuarios.MuiPaper-elevation10 {
+    background-color: red;
+    color: blue;
+}
+
+.taskModal.MuiBox-root {
+    background-color: white;
+    width: 80%;
+    height: 40%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid rgb(173, 173, 173);
+}
+
+.form-image{
+    display: none;
+}
+.upload-image{
+    /* background-color: red; */
+    max-width: 100% !important;
+    border-radius: 200px;
+    display: flex;
+    float:left;
+}
+.inputImage.MuiAvatar-root{
+    width:200px;
+    min-height:200px;
+    cursor:pointer;
+}

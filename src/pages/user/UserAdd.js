@@ -1,7 +1,6 @@
 import React from 'react';
 import Menu from '../../components/Menu';
-import Header from '../../components/Header';
-import { Snackbar, Grid, TextField, Divider, Button, Card } from '@material-ui/core';
+import { Snackbar, Grid, TextField, Divider, Button, Card, InputLabel } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import './estilos.css';
 import api from '../../services/api'
@@ -11,19 +10,37 @@ class UserAdd extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: "",
             name: "",
             age: "",
             cpf: "",
             rg: "",
             email: "",
             senha: "",
+            team: "",
+            position: "",
+            path_image: "",
+            googleCalendar: 0,
             open: false,
-            openAux: false
+            openAux: false,
+            options: [],
+            imageFile: null,
+            phone: "",
+            supervisor: 0
         };
     }
 
 
-    componentDidMount() {
+    async componentDidMount() {
+        const responseOption = await api.get('/getTeams');
+        if (responseOption.status == 200) {
+            const options = responseOption.data.map((option) => {
+                return option;
+            });
+            this.setState({
+                options: options
+            });
+        }
 
     }
 
@@ -75,12 +92,19 @@ class UserAdd extends React.Component {
 
         const handleSubmit = async () => {
 
-            const { name,
+            const {
+                name,
                 age,
                 cpf,
                 rg,
                 email,
-                senha
+                senha,
+                team,
+                position,
+                path_image,
+                googleCalendar,
+                phone,
+                supervisor
             } = this.state;
 
             const response = await api.post('/user', {
@@ -89,18 +113,34 @@ class UserAdd extends React.Component {
                 cpf,
                 rg,
                 login: email,
-                senha
+                senha,
+                team_id: team,
+                position,
+                path_image,
+                googleCalendar,
+                phone,
+                supervisor
             });
             try {
                 if (response.status === 200) {
                     this.setState({
-                        openAux: true, 
+                        id: "",
                         name: "",
                         age: "",
                         cpf: "",
-                        rg : "",
+                        rg: "",
                         email: "",
-                        senha: ""
+                        senha: "",
+                        team_id: "",
+                        position: "",
+                        path_image: "",
+                        googleCalendar: 0,
+                        open: false,
+                        openAux: true,
+                        options: [],
+                        imageFile: null,
+                        phone: "",
+                        supervisor: 0 
                     });
                 } else {
                     this.setState({ open: true });
@@ -112,9 +152,11 @@ class UserAdd extends React.Component {
 
 
         }
+
         const handleClose = () => {
             this.setState({ open: !this.state.open });
         };
+
         const handleCloseAux = () => {
             this.setState({ openAux: !this.state.openAux });
         };
@@ -122,7 +164,7 @@ class UserAdd extends React.Component {
 
         return (
             <>
-                <Menu user={this.props.location.state.user}  history={this.props.history}/>
+                <Menu user={this.props.location.state.user} history={this.props.history} />
                 <div className="user">
                     <Card className="cardContent" elevation={10}>
 
@@ -184,6 +226,91 @@ class UserAdd extends React.Component {
                                     variant="outlined"
                                     fullWidth />
                             </Grid>
+                            <Grid container item xs={12} md={6} lg={6} className="rowForm" >
+                                <TextField placeholder=""
+                                    required
+                                    min="0"
+                                    label="Telefone"
+                                    onChange={(e) => { this.setState({ phone: e.target.value }) }}
+                                    value={this.state.phone}
+                                    variant="outlined"
+                                    fullWidth />
+                            </Grid>
+                            <Grid container item xs={12} md={6} lg={6} className="rowForm" >
+                                {this.props.location.state.user.login == "Administrador" &&
+                                    <>
+                                        <InputLabel id="Supervisor">Supervisor</InputLabel>
+                                        <select
+                                            style={{
+                                                width: "100%",
+                                                height: "45px",
+                                                border: "1px solid #c9c9c9",
+                                                borderRadius: "5px",
+                                                paddingBotton: "10px"
+
+                                            }}
+                                            labelId="Supervisor"
+                                            label="Supervisor"
+                                            value={this.state.supervisor}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    supervisor: event.target.value
+                                                })
+                                            }}
+                                            fullWidth>
+                                            <option value="0">Não</option>
+                                            <option value="1">Sim</option>
+                                        </select>
+                                    </>
+                                }
+                            </Grid>
+                            {this.props.location.state.user.login == "Administrador" &&
+                                <>
+                                    <Grid container item xs={12} md={6} lg={6} className="rowForm" >
+                                        {/* <InputLabel id="options">Equipe</InputLabel> */}
+                                        <select
+                                            style={{
+                                                width: "100%",
+                                                height: "45px",
+                                                border: "1px solid #c9c9c9",
+                                                borderRadius: "5px"
+
+                                            }}
+                                            labelId="options"
+                                            label="Equipe"
+                                            value={this.state.team}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    team: event.target.value
+                                                })
+                                            }}
+                                            fullWidth>
+                                            {
+                                                this.state.options.map((option, index) =>
+                                                    <>
+                                                        <option key={option.value} index={index} value={option.value}>{option.label}</option>
+                                                    </>
+                                                )
+                                            }
+                                        </select>
+
+                                    </Grid>
+                                    <Grid container item xs={12} md={6} lg={6} className="rowForm" >
+                                        <TextField placeholder=""
+                                            required
+                                            min="0"
+                                            label="Cargo"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    position: e.target.value
+                                                })
+                                            }}
+                                            value={this.state.position}
+                                            variant="outlined"
+                                            fullWidth />
+                                    </Grid>
+                                </>
+                            }
                             <Grid container className="rowForm" item xs={12}>
                                 <Divider className="divisor" />
                             </Grid>

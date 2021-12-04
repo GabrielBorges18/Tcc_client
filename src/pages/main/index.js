@@ -1,7 +1,7 @@
-// import api from '../../services/api'
+import api from '../../services/api'
+import socket from '../../services/socket'
 import React from 'react';
 import Menu from '../../components/Menu';
-import Header from '../../components/Header';
 import { Paper, Grid } from '@material-ui/core';
 import './estilos.css';
 import { People, Today, Cached, BarChart } from '@material-ui/icons';
@@ -26,6 +26,7 @@ const data = {
         }
     ]
 };
+
 const options = {
     scales: {
         yAxes: [
@@ -40,12 +41,54 @@ const options = {
 
 class Main extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            connectedUsers: 1,
+            nextEvents: [],
+            progressTasks: [],
+            loading: true
+        }
+    }
+
+    async componentDidMount() {
+
+        try {
+            const result = await api.get("getInfosMainPage/" + this.props.location.state.user.id);
+
+            const { data, status } = result
+            if (status === 200) {
+                this.setState({
+                    loading: false,
+                    nextEvents: data.nextEvents,
+                    progressTasks: data.progressTasks
+                });
+            }
+            else {
+                alert("Erro ao carregar informações da tela inicial");
+            }
+        }
+        catch (e) {
+            console.log(e);
+            alert("Erro ao carregar informações da tela inicial");
+        }
+        socket.on('connected_users', (data) => {
+            console.log(data);
+            this.setState({
+                connectedUsers: data.users
+            })
+        });
+
+
+        setTimeout(socket.emit('getConnectedUsers'), 2000);
+
+
+    }
     render() {
         return (
             <>
 
                 <Menu user={this.props.location.state.user} history={this.props.history} page="main" />
-                {/* <Header user={this.props.location.state.user} history={this.props.history} page="Inicio"/> */}
 
 
                 <div className="principal">
@@ -58,7 +101,7 @@ class Main extends React.Component {
                                 <div className="boxTitle">
                                     <p>Usuarios Online </p>
                                 </div>
-                                <p className="boxContent logged"> 2 </p>
+                                <p className="boxContent logged">{this.state.connectedUsers}</p>
                             </Paper>
                         </Grid>
                         <Grid className="main" item xl={4} lg={4} md={4} sm={12} xs={12}>
@@ -69,7 +112,12 @@ class Main extends React.Component {
                                 <div className="boxTitle">
                                     <p>Próximos Compromissos </p>
                                 </div>
-                                <p className="boxContentTask">&#187; Mostrar TCC pro Professor</p>
+                                {(!this.state.loading && this.state.nextEvents.length > 0) &&
+                                    this.state.nextEvents.map((event, index) => 
+                                        <p key={index} className="boxContentTask">&#187; {event.title} </p>
+                                    )
+                                }
+
                             </Paper>
                         </Grid>
                         <Grid className="main" item xl={4} lg={4} md={4} sm={12} xs={12}>
@@ -80,8 +128,11 @@ class Main extends React.Component {
                                 <div className="boxTitle">
                                     <p>Tarefas em Andamento</p>
                                 </div>
-                                <p className="boxContentTask">&#187; User Experience</p>
-                                <p className="boxContentTask">&#187; Fazer parte funcional do módulo de Tarefas</p>
+                                {(!this.state.loading && this.state.progressTasks.length > 0) &&
+                                    this.state.progressTasks.map((task, index) => 
+                                        <p key={index} className="boxContentTask">&#187; {task.title} </p>
+                                    )
+                                }
                             </Paper>
                         </Grid>
                         <Grid className="main" item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -95,7 +146,7 @@ class Main extends React.Component {
                                 <Bar
                                     data={data}
                                     options={options}
-                                    style={{maxHeight: "78%", minHeight:"200px"}}
+                                    style={{ maxHeight: "78%", minHeight: "200px" }}
                                 />
                             </Paper>
                         </Grid>

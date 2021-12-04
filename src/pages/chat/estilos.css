@@ -2,19 +2,19 @@
     /* background-color:#f8f9fa; */
     width: 100%;
     display: block;
-    padding: 10px 20px 10px 275px;
-    min-height: calc(100vh - 100px);
-    /* height:100%; */
+    padding: 5px 10px 10px 275px;
+    height: calc(100vh - 400px);
 }
 
 @media screen and (max-width: 991px) {
     .chat {
-        padding: 10px 20px 10px 20px;
+        padding: 5px 10px 10px 20px;
     }
 }
 
 .containerChat {
     width: 100%;
+    height: calc(100vh - 100px);
     font-weight: bold;
     font-size: 19px;
     display: grid;
@@ -23,7 +23,7 @@
 }
 
 .chatHistory {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 210px);
     padding: 0px 0px;
     overflow-y: scroll;
 }
@@ -172,3 +172,17 @@
 .attachButton.MuiButton-root:hover {
     background-color: rgb(100, 2, 100);
 }
+.addChatModal.MuiBox-root {
+    background-color: white;
+    width: 20%;
+    height: -webkit-fit-content; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid rgb(173, 173, 173);
+}
+.MuiList-root.MuiList-padding{
+    width:100%;
+}
+
